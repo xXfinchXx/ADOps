@@ -1,4 +1,4 @@
-$releaseDeflist = get-adoreleasedefinitions | Where name -notMatch 'lasmigration'
+$releaseDeflist = get-adoreleasedefinitions
 foreach ($id in $testlist.id){
     remove-adoreleasedefinition -ReleaseDefinitionID $ID
 }
