@@ -13,7 +13,7 @@ function set-adoreleasedefinition{
         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ADOUser,$ADOpat)))
     }
     process{
-        $uri = "https://vsrm.dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/release/definitions?api-version=6.0-preview"
+        $uri = "https://vsrm.dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/release/definitions?api-version=6.1-preview.4"
         $result = Invoke-RestMethod -Uri $uri -Method Put -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Body $releaseDefinitionJson
     }
     end {
