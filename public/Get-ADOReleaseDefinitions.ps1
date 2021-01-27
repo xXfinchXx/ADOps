@@ -13,8 +13,9 @@ function get-adoreleasedefinitions {
       $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ADOUser,$ADOpat)))
    }
    process{   
-      $uri = "https://vsrm.dev.azure.com/$($vstsAccount)/$($projectName)/_apis/release/definitions"
-      $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}}
+      $uri = "https://vsrm.dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/release/definitions?api-version=6.1-preview.4"
+      $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
+   }
    end{
       return ($result.value | Select Name,ID,url,path,revision,queueStatus)
    }
