@@ -1,7 +1,7 @@
-function get-adobuilds {
+function get-adobuild {
     Param(
        [Parameter(Mandatory)][string]$buildDefID,
-       [string]$latest='1'
+       $latest
     )
     begin{
        if (!($ADOpat)){
@@ -14,10 +14,13 @@ function get-adobuilds {
        $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ADOUser,$ADOpat)))
     }
     process{
-      $top='$top'
-      $uri = "https://dev.azure.com/$($ADOaccount)/$($ADOprojectName)/_apis/build/builds?definitions=$($BuildDefID)&$top=$($latest)"
-      
-      
+      if (!($latest)){
+         $top='$top'
+         $uri = "https://dev.azure.com/$($ADOaccount)/$($ADOprojectName)/_apis/build/builds?definitions=$($BuildDefID)&$top=10"
+      }else{
+         $top='$top'
+         $uri = "https://dev.azure.com/$($ADOaccount)/$($ADOprojectName)/_apis/build/builds?definitions=$($BuildDefID)&$top=$($latest)"
+      }       
       $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
    }
    end {
