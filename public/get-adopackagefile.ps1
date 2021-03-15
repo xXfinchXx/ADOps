@@ -3,7 +3,8 @@ function get-adopackagefile {
         [Parameter(Mandatory)][string]$feedid,
         [Parameter(Mandatory)][string]$packagename,
         [Parameter(Mandatory)][string]$packageversion,
-        [Parameter(Mandatory)][string]$SaveTo
+        [Parameter(Mandatory)][string]$SaveTo,
+        [Parameter(Mandatory)][ValidateSet('nupkg','tar.gz','pom')]$PackageType
     )
     begin{
       if (!($ADOpat)){
@@ -16,7 +17,7 @@ function get-adopackagefile {
         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ADOUser,$ADOpat)))
     }
     process{
-        invoke-restmethod -method Get -uri "https://dev.azure.com/${ADOAccount}/_apis/packaging/Feeds/$($feedid)/nuget/packages/$($packagename)/versions/$($packageversion)/content" -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -OutFile $SaveTo
+        invoke-restmethod -method Get -uri "https://dev.azure.com/${ADOAccount}/_apis/packaging/Feeds/$($feedid)/nuget/packages/$($packagename)/versions/$($packageversion)/content" -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -OutFile "$($SaveTo)\$($packagename).$($packageversion).$($packagetype)"
     }
     end{
         Write-host "Saved Package ($($PackageName)) with version ($($Packageversion)) to $($SaveTo)"
