@@ -22,7 +22,7 @@ if ($searchRepoName){
     $repolist = $result.value
 }
 #URL for Permission Report Creation
-$uri="https://dev.azure.com/${ADOAccount}/_apis/permissionsreport?api-version=6.0-preview.1"
+$uri="https://dev.azure.com/${ADOAccount}/_apis/permissionsreport?api-version=6.1-preview.1"
 #Need a tag to differentiate between each report of the same repo
 $date = Get-Date -Format "yyyyMMddhhmm"
 
