@@ -6,7 +6,7 @@ Foreach ($release in $releasedeflist){
     $releaseDef = get-adoreleasedefinition -ReleaseDefinitionID $release.id
     $TemplateReleaseDef = Get-Content -LiteralPath C:\temp\template.json | ConvertFrom-Json -Depth 10
     $json=[PSCustomObject]@{
-        Name = "lasmigration-$($releasedef.name)"
+        Name = "$($releasedef.name)"
         id = $releaseDef.id
         environments = $TemplateReleaseDef.environments
         artifacts = $releaseDef.artifacts
@@ -14,7 +14,7 @@ Foreach ($release in $releasedeflist){
         releaseNameFormat = '$(Build.BuildNumber)-r$(rev:rr)'
         tags = $TemplateReleaseDef.tags
         properties = $TemplateReleaseDef.properties
-        path = '\LASMigration'
+        path = '\'
     }
     New-adoreleasedefinition -ReleaseDefinitionJSON ($json|ConvertTo-Json -Depth 10)
 }
