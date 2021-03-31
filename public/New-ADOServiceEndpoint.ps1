@@ -1,7 +1,8 @@
 function New-ADOServiceEndpoint {
     Param(
        [string]$EndPointName='',
-       [string]$EndPointUrl=''
+       [string]$EndPointUrl='',
+       [validateset()]$type
     )
     begin{
         if (!($ADOpat)){
@@ -18,7 +19,7 @@ function New-ADOServiceEndpoint {
         $body=@"
             {
                 "name": "$($EndPointName)",
-                "type": "GIT",
+                "type": "$($Type)",
                 "url": "$($EndPointUrl)",
                 "authorization": {
                   "parameters": {
