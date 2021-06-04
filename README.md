@@ -14,6 +14,7 @@ The ADOps Module consists of a number of functions that will assist in the retri
 It will also allow the user to trigger a deployment without even touching the webpage.
 
 ## Functions
+
 ## Set-ADOConnection
 
 ```POWERSHELL
@@ -41,6 +42,7 @@ Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
+
 ### -ADOProjectName
 
 Enter your Azure DevOps project name here to save it for later use
@@ -56,6 +58,7 @@ Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
+
 ### -ADOPAT
 
 Enter your Azure DevOps PAT here to save it for later use
@@ -71,3 +74,23 @@ Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
+
+## Get-ADOBuildDefinitions
+
+```POWERSHELL
+Get-ADOBuildDefinitions
+```
+
+## DESCRIPTION
+
+Collect all Build Definitions from your desired project. This will filter to just the Name, ID, url, path, revision, and queueStatus
+
+## Get-ADOReleaseDefinitions
+
+```POWERSHELL
+Get-ADOReleaseDefinitions
+```
+
+## DESCRIPTION
+
+Collect all Release Definitions from your desired project. This will filter to just the Name, ID, url, path, revision, and queueStatus
