@@ -94,3 +94,47 @@ Get-ADOReleaseDefinitions
 ## DESCRIPTION
 
 Collect all Release Definitions from your desired project. This will filter to just the Name, ID, url, path, revision, and queueStatus
+
+## Clone-ADOBuild
+
+```POWERSHELL
+Clone-ADOBuild [-BuildDefinitionname][-BuildDefinitionID]
+```
+
+## DESCRIPTION
+
+Clone a specific Azure DevOps Non-YAML Build Definition
+
+## PARAMETERS
+
+### -BuildDefinitionname
+
+Provide the Name of the Build Definition you would like to clone
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 1
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -BuildDefinitionID
+
+Provide the ID of the Build Definition you would like to clone
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 1
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
