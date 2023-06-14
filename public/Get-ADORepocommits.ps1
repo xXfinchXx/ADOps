@@ -1,7 +1,7 @@
-function get-adorepolist {
+function get-adorepocommits {
     Param(
-       [string]$searchRepoName = '',
-       $ADOprojectName
+       $ADOprojectName,
+       $repositoryId
     )
     begin{
         if (!($ADOpat)){
@@ -14,15 +14,10 @@ function get-adorepolist {
         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ADOUser,$ADOpat)))
     }
     process{
-        $uri = "https://dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/git/repositories"
+        $uri = "https://dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/git/repositories/$($repositoryId)/commits"
         $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
-        if ($searchRepoName){
-            $out=$result.value | Where name -Match "$($SearchRepoName)" 
-        }else{
-            $out = $result.value
-        }
     }
     end {
-        return $out
+        return $result
     }
  }

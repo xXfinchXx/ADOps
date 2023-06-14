@@ -1,7 +1,7 @@
-function get-adorepolist {
-    Param(
-       [string]$searchRepoName = '',
-       $ADOprojectName
+function new-adobuilddefinition{
+    param(
+        [parameter(Mandatory)]$buildDefinitionJSON,
+        $adoproject
     )
     begin{
         if (!($ADOpat)){
@@ -13,16 +13,12 @@ function get-adorepolist {
         }
         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ADOUser,$ADOpat)))
     }
-    process{
-        $uri = "https://dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/git/repositories"
-        $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
-        if ($searchRepoName){
-            $out=$result.value | Where name -Match "$($SearchRepoName)" 
-        }else{
-            $out = $result.value
-        }
-    }
+    process {
+        if($adoproject){$ADOprojectName = $adoproject}
+        $uri = "https://dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/pipelines?api-version=7.1-preview.1"
+        $result = Invoke-RestMethod -Uri $uri -Method Post -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Body $buildDefinitionJson
+    }    
     end {
-        return $out
+        return ($result )
     }
- }
+}

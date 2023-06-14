@@ -1,7 +1,8 @@
 function get-adobuild {
     Param(
        [Parameter(Mandatory)][string]$buildDefID,
-       $latest
+       $latest,
+       $ADOprojectName
     )
     begin{
        if (!($ADOpat)){

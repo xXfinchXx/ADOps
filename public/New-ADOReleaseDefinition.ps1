@@ -1,6 +1,7 @@
 function new-adoreleasedefinition{
     param(
-        [parameter(Mandatory)]$ReleaseDefinitionJSON
+        [parameter(Mandatory)]$ReleaseDefinitionJSON,
+        $adoproject
     )
     begin{
         if (!($ADOpat)){
@@ -13,6 +14,7 @@ function new-adoreleasedefinition{
         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ADOUser,$ADOpat)))
     }
     process {
+        if($adoproject){$ADOprojectName = $adoproject}
         $uri = "https://vsrm.dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/release/definitions?api-version=6.0-preview"
         $result = Invoke-RestMethod -Uri $uri -Method Post -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Body $releaseDefinitionJson
     }    

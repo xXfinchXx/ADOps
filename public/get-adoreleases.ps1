@@ -1,6 +1,9 @@
 function get-adoreleases{
     param(
-        $releasedefinitionname
+        $releasedefinitionname,
+        $ADOprojectName,
+        $releaseid,
+        $latest
     )
     begin{
         if (!($ADOpat)){
@@ -13,8 +16,19 @@ function get-adoreleases{
         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ADOUser,$ADOpat)))
     }
     process{
-        $releaselist = get-adoreleasedefinitions  | Where name -match $releasedefinitionname
-        $uri="https://vsrm.dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/release/releases?definitionId=$($releaselist.id)&api-version=6.1-preview.8"
+        if ($latest){
+            $top='$top'
+            if (!($Releaseid)){$releaselist = get-adoreleasedefinitions -ADOprojectName $ADOprojectName | Where name -match $releasedefinitionname
+                $uri="https://vsrm.dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/release/releases?definitionId=$($releaselist.id)&$top=$latest"}
+                else{$uri="https://vsrm.dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/release/releases?definitionId=$($releaseid)&$top=$latest"}
+        
+        }else{
+            $top='$top'
+            Write-host "Showing the latest 10 releases"
+            if (!($Releaseid)){$releaselist = get-adoreleasedefinitions -ADOprojectName $ADOprojectName | Where name -match $releasedefinitionname
+            $uri="https://vsrm.dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/release/releases?definitionId=$($releaselist.id)&$top=10"}
+            else{$uri="https://vsrm.dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/release/releases?definitionId=$($releaseid)&$top=10"}
+        }    
         $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
     }
     end{

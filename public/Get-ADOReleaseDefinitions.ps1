@@ -1,6 +1,6 @@
 function get-adoreleasedefinitions {
    Param(
-
+      $ADOprojectName
    )
    begin{
       if (!($ADOpat)){
@@ -17,6 +17,6 @@ function get-adoreleasedefinitions {
       $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
    }
    end{
-      return ($result.value | Select Name,ID,url,path,revision,queueStatus)
+      return ($result.value)
    }
 }

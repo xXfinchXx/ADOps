@@ -1,7 +1,8 @@
 function get-adorelease{
     param(
         $releasedefinitionname,
-        $Releaseid
+        $Releaseid,
+        $ADOprojectName
     )
     begin{
         if (!($ADOpat)){
@@ -15,8 +16,8 @@ function get-adorelease{
     }
     process{
         if (!($releaseid)){
-            $releaseinfo = Get-ADOreleases -releaseDefinitionname $releasedefinitionname
-            Get-ADOReleases | select ID,name,description
+            $releaseinfo = Get-ADOreleases -releaseDefinitionname $releasedefinitionname -ADOprojectName $ADOprojectName
+            Get-ADOReleases -releaseDefinitionname $releasedefinitionname -ADOprojectName $ADOprojectName | select ID,name,description
             $release = Read-host -Prompt "Which one of the above releases would you like to see? Please Enter ID from Left Column"
             $Releaseid = ($releaseinfo | Where id -match $Release).id
         }

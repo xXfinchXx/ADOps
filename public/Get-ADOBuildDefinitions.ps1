@@ -1,6 +1,6 @@
 function get-adobuilddefinitions {
    Param(
-
+      $ADOproject
    )
    begin{
       if (!($ADOpat)){
@@ -13,10 +13,11 @@ function get-adobuilddefinitions {
       $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ADOUser,$ADOpat)))
    }
    process {
+      if($adoproject){$ADOprojectName = $adoproject}
       $uri = "https://dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/build/definitions"
       $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
    }
    end {
-      return ($result.value | Select Name,ID,url,path,revision,queueStatus)
+      return ($result.value)
    }   
 }
