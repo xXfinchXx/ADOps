@@ -1,8 +1,8 @@
-$projectlist = get-adoprojects
+$projectlist = get-adoprojectsname
 foreach($project in $projectlist.value){
-    $pipelineDeflist = get-adobuilddefinitions -ADOproject $project.name
+    $pipelineDeflist = get-adopipelinedefinitions -ADOproject $project.name
     Foreach ($pipeline in $pipelinedeflist){
-        $pipelineDef = get-adobuilddefinition -BuildDefinitionID $pipeline.id -ADOproject $project.name
+        $pipelineDef = get-adopipelinedefinition -pipelineDefinitionID $pipeline.id -ADOproject $project.name
         $repo = get-adorepo -ADOprojectName $project.name -repositoryId $pipelineDef.configuration.repository.id
         $repolist = get-adorepolist -ADOprojectName WTD
         $repoNew = $repolist | Where name -match "$($repo.name)"
@@ -13,6 +13,6 @@ foreach($project in $projectlist.value){
             id = $pipelineDef.id
             folder = "\$($project.name)$($pipelineDef.folder)"
         }
-        New-adobuilddefinition -buildDefinitionJSON ($json|ConvertTo-Json -Depth 10) -adoproject WTD
+        New-adopipelinedefinition -pipelineDefinitionJSON ($json|ConvertTo-Json -Depth 10) -adoproject WTD
     }
 }

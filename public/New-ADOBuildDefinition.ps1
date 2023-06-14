@@ -1,6 +1,6 @@
-function new-adobuilddefinition{
+function new-adopipelinedefinition{
     param(
-        [parameter(Mandatory)]$buildDefinitionJSON,
+        [parameter(Mandatory)]$pipelineDefinitionJSON,
         $adoproject
     )
     begin{
@@ -16,7 +16,7 @@ function new-adobuilddefinition{
     process {
         if($adoproject){$ADOprojectName = $adoproject}
         $uri = "https://dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/pipelines?api-version=7.1-preview.1"
-        $result = Invoke-RestMethod -Uri $uri -Method Post -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Body $buildDefinitionJson
+        $result = Invoke-RestMethod -Uri $uri -Method Post -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Body $pipelineDefinitionJson
     }    
     end {
         return ($result )
