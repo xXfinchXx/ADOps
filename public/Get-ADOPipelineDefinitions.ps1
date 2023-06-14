@@ -1,6 +1,5 @@
-function get-adobuilddefinition {
+function get-adopipelinedefinitions {
    Param(
-      [Parameter(Mandatory)][string]$buildDefinitionID,
       $ADOproject
    )
    begin{
@@ -15,10 +14,10 @@ function get-adobuilddefinition {
    }
    process {
       if($adoproject){$ADOprojectName = $adoproject}
-      $uri = "https://dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/pipelines/$($buildDefinitionID)?api-version=7.1-preview.1"
+      $uri = "https://dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/pipelines?api-version=7.1-preview.1"
       $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
    }
    end {
-      return ($result)
+      return ($result.value)
    }   
 }

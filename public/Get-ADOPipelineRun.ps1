@@ -1,7 +1,7 @@
-function get-adobuild {
+function get-adopipelinerun {
     Param(
-       [Parameter(Mandatory)][string]$buildDefID,
-       $latest,
+       [Parameter(Mandatory)][string]$pipelineDefID,
+       [Parameter(Mandatory)][string]$runID,
        $ADOprojectName
     )
     begin{
@@ -15,16 +15,10 @@ function get-adobuild {
        $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ADOUser,$ADOpat)))
     }
     process{
-      if (!($latest)){
-         $top='$top'
-         $uri = "https://dev.azure.com/$($ADOaccount)/$($ADOprojectName)/_apis/build/builds?definitions=$($BuildDefID)&$top=10"
-      }else{
-         $top='$top'
-         $uri = "https://dev.azure.com/$($ADOaccount)/$($ADOprojectName)/_apis/build/builds?definitions=$($BuildDefID)&$top=$($latest)"
-      }       
+      $uri = "https://dev.azure.com/$($ADOaccount)/$($ADOprojectName)/_apis/pipelines/$($pipelineDefID)/runs/$($runId)?api-version=7.1-preview.1"
       $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
    }
    end {
-      return ($result.value | Select @{l='DefinitionName';e={$_.definition.name}}, @{l='DefinitionID';e={$_.definition.id}},buildNumber,id,status,result,reason,sourcebranch,sourceversion,queuetime,starttime,finishtime)
+      return ($result)
    }
 }   
