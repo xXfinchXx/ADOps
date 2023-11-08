@@ -1,6 +1,6 @@
-function get-adotaskgroups {
+function get-adovariablegroups {
     Param(
-        $ADOProjectName
+        $ADOprojectName
     )
     begin{
       if (!($ADOpat)){
@@ -13,7 +13,7 @@ function get-adotaskgroups {
         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ADOUser,$ADOpat)))
     }
     process{
-        $final =invoke-restmethod -method Get -uri "https://dev.azure.com/${ADOAccount}/$($ADOprojectName)/_apis/distributedtask/taskgroups?api-version=7.1-preview.1" -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
+        $final =invoke-restmethod -method Get -uri "https://dev.azure.com/${ADOAccount}/$($ADOprojectName)/_apis/distributedtask/variablegroups?api-version=7.1-preview.2" -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
     }
     end{
         $final
