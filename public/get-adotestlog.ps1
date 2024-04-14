@@ -21,3 +21,4 @@ function get-adotestlog {
       return ($result)
    }
 }
+
