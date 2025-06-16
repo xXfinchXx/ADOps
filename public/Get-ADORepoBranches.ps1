@@ -1,7 +1,8 @@
 function Get-ADORepoBranches {
     Param(
         [Parameter(Mandatory)][string]$repositoryId,
-        $ADOprojectName
+        $ADOprojectName,
+        [switch]$IncludeDates
     )
     begin {
         if (!($ADOpat)) {
@@ -15,9 +16,26 @@ function Get-ADORepoBranches {
     }
     process {
         $uri = "https://dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/git/repositories/$($repositoryId)/refs?api-version=7.1"
-        $result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
-    }
-    end {
-        return $result
+        $refs = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
+        
+        if ($IncludeDates) {
+            $branches = foreach ($ref in $refs.value) {
+                if ($ref.name -like "refs/heads/*") {
+                    # Get commit info for the branch
+                    $commitUri = "https://dev.azure.com/$($ADOAccount)/$($ADOprojectName)/_apis/git/repositories/$($repositoryId)/commits/$($ref.objectId)?api-version=7.1"
+                    $commit = Invoke-RestMethod -Uri $commitUri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
+                    
+                    # Add dates to the branch object
+                    $ref | Add-Member -NotePropertyName 'authorDate' -NotePropertyValue $commit.author.date -Force
+                    $ref | Add-Member -NotePropertyName 'lastCommitDate' -NotePropertyValue $commit.committer.date -Force
+                    $ref
+                }
+            }
+            return @{
+                count = $branches.Count
+                value = $branches
+            }
+        }
+        return $refs
     }
 }
